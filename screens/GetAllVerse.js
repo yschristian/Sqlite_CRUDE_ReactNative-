@@ -9,6 +9,20 @@ const GetAllVerse = () => {
     const db = SQLite.openDatabase('verses.db')
     const [data, setData] = useState([])
     const navigation = useNavigation()
+
+
+    const deleteVerse = (id) => {
+        db.transaction(tx => {
+            tx.executeSql("DELETE FROM verse_table WHERE id=?", [id],
+                (txObj, results) => {
+                    // console.log('Results', results.rowsAffected);
+                    alert("verse deleted successfully")
+                    // navigation.navigate("CreateVerse")
+                }
+            )
+        })
+    }
+
     useEffect(() => {
         db.transaction(
             tx => {
@@ -24,22 +38,11 @@ const GetAllVerse = () => {
                 );
             }
         );
-    }, [])
+    }, [deleteVerse])
 
-    const deleteVerse = (id) => {
-        db.transaction(tx => {
-            tx.executeSql("DELETE FROM verse_table WHERE id=?", [id],
-                (txObj, results) => {
-                    // console.log('Results', results.rowsAffected);
-                    alert("verse deleted successfully")
-                    navigation.navigate("CreateVerse")
-                }
-            )
-        })
-    }
 
     return (
-        <ScrollView style={styles.container}>
+        <View style={styles.container}>
             <Text style={styles.toptext}>all Verses</Text>
             <FlatList
                 data={data}
@@ -55,7 +58,7 @@ const GetAllVerse = () => {
                         </View>
                     </View>
                 )} />
-        </ScrollView>
+        </View>
     )
 }
 

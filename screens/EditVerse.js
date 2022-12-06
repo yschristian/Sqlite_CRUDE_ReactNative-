@@ -9,7 +9,7 @@ const EditVerse = ({ route, navigation }) => {
     const [line, setLine] = useState('')
     const [currentVerse, setCurrentVerse] = useState([])
 
-    // console.log(currentVerse[0]?.descriptions);
+    // console.log(currentVerse);
     const id = route.params.id
     // console.log(id);
 
@@ -18,8 +18,8 @@ const EditVerse = ({ route, navigation }) => {
             db.transaction(
                 tx => {
                     tx.executeSql(
-                        `select title,descriptions,line from verse_table where id =${id}`,
-                        [],
+                        `SELECT * FROM verse_table WHERE id =${id}`,
+                        
                         (_, { rows }) => {
                             // console.log(JSON.stringify(rows._array));
                             setCurrentVerse(rows._array)
@@ -38,8 +38,8 @@ const EditVerse = ({ route, navigation }) => {
     const editVerse = () => {
         db.transaction((tx) =>{
             tx.executeSql(
-                `UPDATE  set title = ?,descriptions = ?, line=? where id=${id}`,
-                [title,descriptions,line ],
+                `UPDATE verse_table  SET title = ?,descriptions = ?, line=? WHERE id=?`,
+                [title,descriptions,line ,id],
                 (tx, results) =>{
                     console.log(results);
                     if(results.rowsAffected >0){
@@ -50,6 +50,7 @@ const EditVerse = ({ route, navigation }) => {
                     }
                 }
             )
+            navigation.navigate("AllVerse")
         })
     }
     return (
